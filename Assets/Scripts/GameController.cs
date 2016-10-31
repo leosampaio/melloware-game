@@ -9,6 +9,9 @@ public class GameController : MonoBehaviour {
 	private int endTime;
 	private int currentTimeCount;
 
+	public Text startCountdownText;
+	private int startCountdown = 5;
+
 	public int numberOfMinigames;
 	private int currentMinigame;
 
@@ -113,5 +116,21 @@ public class GameController : MonoBehaviour {
 	void updateScoreText()
 	{
 		scoreText.text = score.ToString ("D5");
+	}
+
+	void StartCountdown()
+	{
+		startCountdown--;
+		startCountdownText.text = startCountdown.ToString ();
+		if (startCountdown == 0) {
+			CancelInvoke ("StartCountdown");
+			startCountdownText.gameObject.SetActive (false);
+		}
+	}
+
+	public void StartStartCountdown()
+	{
+		startCountdownText.gameObject.SetActive (true);
+		InvokeRepeating ("StartCountdown", 1.0f, 1.0f);
 	}
 }
