@@ -12,26 +12,31 @@ public class GameController : MonoBehaviour {
 	public int numberOfMinigames;
 	private int currentMinigame;
 
+	public bool running = false;
+
 	// Use this for initialization
 	void Start () {
 		currentTimeCount = totalSeconds+1;
 		endTime = 60;
-		TimeCountdown ();
-		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
-
-		currentMinigame = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
+	}
+
+	public void startGame() {
+		TimeCountdown ();
+		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
+		currentMinigame = 1;
+		changeMinigame ();
 	}
 		
 	void TimeCountdown()
 	{
 		currentTimeCount -= 1;
 		int currentTime = endTime - currentTimeCount;
-		timeText.text = "23:" + currentTime.ToString();
+		timeText.text = "23:" + currentTime.ToString ();
 
 		//Check if we've collected all 12 pickups. If we have...
 		if (currentTimeCount == 0) {
