@@ -7,12 +7,14 @@ public class PlayerController : MonoBehaviour {
 
 	private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
 
+	private GameController gameController;
 
 	// Use this for initialization
 	void Start()
 	{
 		//Get and store a reference to the Rigidbody2D component so that we can access it.
 		rb2d = GetComponent<Rigidbody2D> ();
+		gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
 	}
 
 	//FixedUpdate is called at a fixed interval and is independent of frame rate. Put physics code here.
@@ -38,6 +40,10 @@ public class PlayerController : MonoBehaviour {
 		if (other.gameObject.CompareTag("Pickup"))
 		{
 			other.gameObject.SetActive(false);
+			gameController.wonMinigame(10);
+		} else if (other.gameObject.CompareTag("PickupBurn")) {
+			other.gameObject.SetActive(false);
+			gameController.lostMinigame();
 		}
 	}
 }
