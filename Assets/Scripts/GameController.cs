@@ -21,6 +21,11 @@ public class GameController : MonoBehaviour {
 	public GameObject[] lifeSprites;
 	public Text scoreText;
 
+	public GameObject splashLose;
+	public GameObject splashWon;
+	public Text splashWonText;
+	public Text splashLoseText;
+
 	private bool mustChangeMinigame; // flag to change minigame
 
 	// Use this for initialization
@@ -69,6 +74,8 @@ public class GameController : MonoBehaviour {
 		}
 		score += minigameScore;
 		print ("WON YAY");
+		controlSplashWon (true, minigameScore);
+		controlSplashWon (false, minigameScore);
 		updateScoreText ();
 		mustChangeMinigame = true;
 	}
@@ -132,5 +139,23 @@ public class GameController : MonoBehaviour {
 	{
 		startCountdownText.gameObject.SetActive (true);
 		InvokeRepeating ("StartCountdown", 1.0f, 1.0f);
+	}
+
+	void controlSplashLose(bool show)
+	{
+		if (show) {
+			splashLose.SetActive (true);
+		} else {
+			splashLose.SetActive (false);
+		}
+	}
+
+	void controlSplashWon(bool show, int scoreWon)
+	{
+		if (show) {
+			splashWon.SetActive (true);
+		} else {
+			splashWon.SetActive (false);
+		}
 	}
 }
