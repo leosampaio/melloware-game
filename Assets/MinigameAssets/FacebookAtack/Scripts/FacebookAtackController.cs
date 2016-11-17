@@ -3,6 +3,10 @@ using System.Collections;
 
 public class FacebookAtackController : MonoBehaviour {
 
+	// All Minigames must have these variables
+	public int totalSeconds;
+	private int currentTimeCount;
+
 	public GameObject facebookPage;
 	public int nPagesMax;
 	private int nPages;
@@ -12,14 +16,32 @@ public class FacebookAtackController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		nPages = Random.Range (1, nPagesMax);
+		gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
+
+		int difficulty = gameController.getDifficulty ();
+
+		nPages = Random.Range (difficulty, difficulty*2);
 		windowCount = nPages;
 		StartCoroutine (popUpWindows ());
+
+		totalSeconds = (int)(nPages * 2) - (difficulty-1);
+		currentTimeCount = totalSeconds+1;		
+		TimeCountdown ();
+		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void TimeCountdown()
+	{
+		currentTimeCount -= 1;
+		gameController.setTime (currentTimeCount);
+		if (currentTimeCount == 0) {
+			gameController.lostMinigame ();
+		}
 	}
 
 	IEnumerator popUpWindows()
@@ -37,7 +59,6 @@ public class FacebookAtackController : MonoBehaviour {
 	{
 		windowCount--;
 		if (windowCount == 0) {
-			gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
 			gameController.wonMinigame(10*nPages);
 		}
 	}

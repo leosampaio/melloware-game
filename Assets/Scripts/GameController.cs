@@ -4,13 +4,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-	// minigame countdown properties
-	// TODO: refactor into a Timer Model
+	// minigame countdown
 	public Text timeText;
-	public int totalSeconds;
-	private int endTime;
-	private int currentTimeCount;
-	private bool timerIsPaused = false;
 
 	// properties of countdown that triggers just before game start
 	// (5, 4, 3...)
@@ -46,8 +41,6 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		currentTimeCount = totalSeconds+1;
-		endTime = 60;
 		score = 0;
 		canUnloadMinigame = false;
 		wonTextTemplate = splashWonText.text;
@@ -69,8 +62,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void startGame() {
-		TimeCountdown ();
-		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
+
 		currentMinigame = 1;
 		lifeCount = 4;
 		changeMinigame ();
@@ -79,26 +71,13 @@ public class GameController : MonoBehaviour {
 
 	// methods for controling minigame countdown
 
-	void TimeCountdown()
+	public void setTime(int currentTime)
 	{
-		if (!timerIsPaused) {
-			currentTimeCount -= 1;
-			int currentTime = endTime - currentTimeCount;
-			timeText.text = "23:" + currentTime.ToString ();
-
-			//Check if we've collected all 12 pickups. If we have...
-			if (currentTimeCount == 0) {
-				timeText.text = "00:00";
-				lostMinigame ();
-				timerIsPaused = true;
-			}
+		int clockTime = 60 - currentTime;
+		timeText.text = "23:" + clockTime.ToString ();
+		if (currentTime == 0) {
+			timeText.text = "00:00";
 		}
-	}
-
-	void restartTime()
-	{
-		currentTimeCount = totalSeconds;
-		timerIsPaused = false;
 	}
 
 	// methods for minigame control
@@ -227,7 +206,6 @@ public class GameController : MonoBehaviour {
 		// show splash!
 		controlSplashWon (true, score);
 		canUnloadMinigame = true;
-		timerIsPaused = true;
 
 		// BLINK IT
 		float blinkingTime = 0.05f;
@@ -243,30 +221,33 @@ public class GameController : MonoBehaviour {
 		controlSplashWon (false, score);
 		changeMinigame ();
 		updateScoreText ();
-		restartTime ();
 	}
 
 	IEnumerator showSplashLose()
 	{
 		controlSplashLose (true);
 		canUnloadMinigame = true;
-		timerIsPaused = true;
 
 		yield return new WaitForSeconds(3f);
 
 		controlSplashLose (false);
 		changeMinigame ();
-		restartTime ();
 	}
 
 	IEnumerator showSplashGameOver()
 	{
 		controlSplashGameOver (true);
 		canUnloadMinigame = true;
-		timerIsPaused = true;
 
 		yield return new WaitForSeconds(3);
 
 		controlSplashGameOver (false);
+	}
+
+	// game difficulty
+
+	public int getDifficulty()
+	{
+		return 1 + (int) score / 100;
 	}
 }
