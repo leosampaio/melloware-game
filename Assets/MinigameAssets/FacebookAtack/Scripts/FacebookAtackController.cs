@@ -20,7 +20,7 @@ public class FacebookAtackController : MonoBehaviour {
 
 		int difficulty = gameController.getDifficulty ();
 
-		nPages = Random.Range (difficulty, difficulty*2);
+		nPages = Random.Range (difficulty, difficulty*2+1);
 		windowCount = nPages;
 		StartCoroutine (popUpWindows ());
 

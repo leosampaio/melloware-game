@@ -103,7 +103,7 @@ public class GameController : MonoBehaviour {
 	void changeMinigame()
 	{
 		// randomly select next and load it
-		currentMinigame = Random.Range(2, numberOfMinigames);
+		currentMinigame = Random.Range(2, numberOfMinigames+1);
 		Application.LoadLevelAdditive(currentMinigame);
 	}
 
