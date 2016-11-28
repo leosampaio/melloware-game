@@ -48,9 +48,11 @@ public class MainCameraController : MonoBehaviour {
 
 	public void focusOnGame() {
 		focusingOnGame = true;
+		focusingOutOfGame = false;
 	}
 
 	public void focusOutOfGame() {
 		focusingOutOfGame = true;
+		focusingOnGame = false;
 	}
 }

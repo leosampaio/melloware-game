@@ -12,18 +12,24 @@ public class NetflixAtackController : MonoBehaviour {
 
 	private GameController gameController;
 
+	private int difficulty;
+
 	// Use this for initialization
 	void Start () {
 		gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
 
-		int difficulty = gameController.getDifficulty ();
+		difficulty = gameController.getDifficulty (3);
 
 		totalSeconds = 5;
 		currentTimeCount = totalSeconds+1;		
 		TimeCountdown ();
 		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 
-		InvokeRepeating("popUpWindows", 0, 1f/difficulty);
+		float delay = 1.0f;
+		if (difficulty == 1) {delay = 0.8f;}
+		else if (difficulty == 2) {delay = 0.7f;}
+		else {delay = 0.6f;}
+		InvokeRepeating("popUpWindows", 0, delay);
 	}
 	
 	// Update is called once per frame
@@ -36,7 +42,7 @@ public class NetflixAtackController : MonoBehaviour {
 		currentTimeCount -= 1;
 		gameController.setTime (currentTimeCount);
 		if (currentTimeCount == 0) {
-			gameController.wonMinigame (20);
+			gameController.wonMinigame (20*difficulty);
 		}
 	}
 

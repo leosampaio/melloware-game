@@ -39,12 +39,19 @@ public class GameController : MonoBehaviour {
 
 	public Camera mainCamera;
 
+	public GameObject audioSource;
+	private BackgroundAudioContoller audioController;
+
 	// Use this for initialization
 	void Start () {
+		audioController = audioSource.GetComponent<BackgroundAudioContoller>();
+		currentMinigame = 1;
+		lifeCount = 4;
 		score = 0;
 		canUnloadMinigame = false;
 		wonTextTemplate = splashWonText.text;
 		loseTextTemplate = splashLoseText.text;
+		audioController.playMenuBackground ();
 	}
 	
 	// Update is called once per frame
@@ -65,8 +72,11 @@ public class GameController : MonoBehaviour {
 
 		currentMinigame = 1;
 		lifeCount = 4;
-		changeMinigame ();
+		score = 0;
+		audioController.playGameBackground ();
+		updateLifeCount ();
 		updateScoreText ();
+		changeMinigame ();
 	}
 
 	// methods for controling minigame countdown
@@ -104,6 +114,7 @@ public class GameController : MonoBehaviour {
 	{
 		// randomly select next and load it
 		currentMinigame = Random.Range(2, numberOfMinigames+1);
+//		currentMinigame = 4;
 		Application.LoadLevelAdditive(currentMinigame);
 	}
 
@@ -147,7 +158,6 @@ public class GameController : MonoBehaviour {
 	{
 		CancelInvoke ("TimeCountdown");
 		StartCoroutine(showSplashGameOver ());
-		mainCamera.GetComponent<MainCameraController> ().focusOutOfGame ();
 	}
 		
 	// control starting countdown (5, 4, 3...) at game start
@@ -167,6 +177,7 @@ public class GameController : MonoBehaviour {
 	public void StartStartCountdown()
 	{
 		startCountdownText.gameObject.SetActive (true);
+		audioController.playStartCountdown ();
 		InvokeRepeating ("StartCountdown", 1.0f, 1.0f);
 	}
 
@@ -206,6 +217,7 @@ public class GameController : MonoBehaviour {
 		// show splash!
 		controlSplashWon (true, score);
 		canUnloadMinigame = true;
+		audioController.playWon ();
 
 		// BLINK IT
 		float blinkingTime = 0.05f;
@@ -219,6 +231,7 @@ public class GameController : MonoBehaviour {
 
 		// hide splash and update game state
 		controlSplashWon (false, score);
+		audioController.accelerateGameAudio (score);
 		changeMinigame ();
 		updateScoreText ();
 	}
@@ -227,8 +240,9 @@ public class GameController : MonoBehaviour {
 	{
 		controlSplashLose (true);
 		canUnloadMinigame = true;
+		audioController.playLost ();
 
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(2f);
 
 		controlSplashLose (false);
 		changeMinigame ();
@@ -239,15 +253,20 @@ public class GameController : MonoBehaviour {
 		controlSplashGameOver (true);
 		canUnloadMinigame = true;
 
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(2);
+
+		mainCamera.GetComponent<MainCameraController> ().focusOutOfGame ();
+
+		yield return new WaitForSeconds(0.5f);
 
 		controlSplashGameOver (false);
+		audioController.playMenuBackground ();
 	}
 
 	// game difficulty
 
-	public int getDifficulty()
+	public int getDifficulty(int max)
 	{
-		return 1 + (int) score / 100;
+		return (int) Mathf.Min(1 + (int) score / 100, max);
 	}
 }

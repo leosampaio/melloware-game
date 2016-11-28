@@ -24,4 +24,9 @@ public class PartyMessageTextCreator : MonoBehaviour {
 	void Update () {
 	
 	}
+
+	public void changeMessage() {
+		int message = Random.Range (0, possibleMessages.Length);
+		transform.GetComponent<TextMesh> ().text = possibleMessages [message];
+	}
 }

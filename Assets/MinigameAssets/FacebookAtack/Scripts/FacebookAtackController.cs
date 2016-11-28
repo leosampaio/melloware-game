@@ -13,12 +13,13 @@ public class FacebookAtackController : MonoBehaviour {
 	public int windowCount;
 
 	private GameController gameController;
+	private int difficulty;
 
 	// Use this for initialization
 	void Start () {
 		gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
 
-		int difficulty = gameController.getDifficulty ();
+		difficulty = gameController.getDifficulty (3);
 
 		nPages = Random.Range (difficulty, difficulty*2+1);
 		windowCount = nPages;
@@ -59,7 +60,7 @@ public class FacebookAtackController : MonoBehaviour {
 	{
 		windowCount--;
 		if (windowCount == 0) {
-			gameController.wonMinigame(10*nPages);
+			gameController.wonMinigame(20*difficulty);
 		}
 	}
 }

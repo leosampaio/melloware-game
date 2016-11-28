@@ -35,19 +35,23 @@ public class TelegramSilencingController : MonoBehaviour
 	private GameController gameController;
 	private int difficulty;
 
+	public AudioSource notiSound;
+
 	// Use this for initialization
 	void Start ()
 	{
 		gameController = (GameController) GameObject.Find("GameController").GetComponent<GameController>();
-		difficulty = gameController.getDifficulty ();
+		difficulty = gameController.getDifficulty (3);
+
+		notiSound = GetComponent<AudioSource> ();
 
 		totalSeconds = 5;
 		currentTimeCount = totalSeconds+1;
 		TimeCountdown ();
 		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 
-		advisorPopInterval = 4.5f-difficulty;
-		partyPopInterval = advisorPopInterval / 2f * 1f;
+		advisorPopInterval = 2f-difficulty/3;
+		partyPopInterval = advisorPopInterval / 2f + 0.1f;
 
 		currentAdvisorNotiPosition = 0;
 		updateNotificationsView ();
@@ -65,6 +69,8 @@ public class TelegramSilencingController : MonoBehaviour
 	void popAdvisorMessage ()
 	{
 		if (!pausePop) {
+			notiSound.Play ();
+
 			// get it to top
 			sendNotiToTop (currentAdvisorNotiPosition);
 
@@ -85,6 +91,9 @@ public class TelegramSilencingController : MonoBehaviour
 	void popPartyMessage()
 	{
 		if (!pausePop) {
+
+			notiSound.Play ();
+
 			// fill with messages
 			if (countPartyMessages < maxMessages) {
 				GameObject newMessage = Instantiate (PartyMessageNoti, telegramPage.transform) as GameObject;
@@ -96,12 +105,13 @@ public class TelegramSilencingController : MonoBehaviour
 				countPartyMessages++;
 			}
 
-		// or pop new notifications
-		else {
+			// or pop new notifications
+			else {
 				int selected = -1;
 				do {
 					selected = Random.Range (0, maxMessages);
 				} while (selected == currentAdvisorNotiPosition);
+				messageSpots [selected].GetComponentInChildren<PartyMessageTextCreator> ().changeMessage ();
 				sendNotiToTop (selected);
 			}
 		}
