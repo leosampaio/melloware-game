@@ -1,11 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEditor;
+using System.IO;
 
 public class GameController : MonoBehaviour {
 
 	// minigame countdown
 	public Text timeText;
+
+	public TextAsset highscoreFile;
+	public Text highscoreLabel;
+	public int currentHighscore;
+	public Text gameOverFinalScore;
 
 	// properties of countdown that triggers just before game start
 	// (5, 4, 3...)
@@ -18,7 +25,7 @@ public class GameController : MonoBehaviour {
 
 	// player control properties
 	private int score;
-	private int lifeCount;
+	public int lifeCount;
 	public GameObject[] lifeSprites;
 	public Text scoreText;
 
@@ -52,6 +59,7 @@ public class GameController : MonoBehaviour {
 		wonTextTemplate = splashWonText.text;
 		loseTextTemplate = splashLoseText.text;
 		audioController.playMenuBackground ();
+		checkHighScore ();
 	}
 	
 	// Update is called once per frame
@@ -69,7 +77,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void startGame() {
-
 		currentMinigame = 1;
 		lifeCount = 4;
 		score = 0;
@@ -157,6 +164,8 @@ public class GameController : MonoBehaviour {
 	void endGame()
 	{
 		CancelInvoke ("TimeCountdown");
+		updateHighscore ();
+		checkHighScore ();
 		StartCoroutine(showSplashGameOver ());
 	}
 		
@@ -252,6 +261,7 @@ public class GameController : MonoBehaviour {
 	{
 		controlSplashGameOver (true);
 		canUnloadMinigame = true;
+		gameOverFinalScore.text = "GAME OVER\nSCORED " + score.ToString();
 		audioController.playGameOver ();
 
 		yield return new WaitForSeconds(2);
@@ -269,5 +279,24 @@ public class GameController : MonoBehaviour {
 	public int getDifficulty(int max)
 	{
 		return (int) Mathf.Min(1 + (int) score / 100, max);
+	}
+
+	// HIGH SCORE and implications of its existance
+	private void checkHighScore() {
+		try {
+			currentHighscore = int.Parse (File.ReadAllText (Application.persistentDataPath + "/highscore.txt"));
+		}
+		catch (System.Exception e) {
+			File.WriteAllText(Application.persistentDataPath +"/highscore.txt", "0");
+			currentHighscore = 0;
+		}
+
+		highscoreLabel.text = currentHighscore.ToString("D5");
+	}
+
+	private void updateHighscore() {
+		if (score > currentHighscore) {
+			File.WriteAllText (Application.persistentDataPath + "/highscore.txt", score.ToString ());
+		}
 	}
 }
