@@ -114,7 +114,7 @@ public class GameController : MonoBehaviour {
 	{
 		// randomly select next and load it
 		currentMinigame = Random.Range(2, numberOfMinigames+1);
-//		currentMinigame = 4;
+//		currentMinigame = 5;
 		Application.LoadLevelAdditive(currentMinigame);
 	}
 
@@ -252,6 +252,7 @@ public class GameController : MonoBehaviour {
 	{
 		controlSplashGameOver (true);
 		canUnloadMinigame = true;
+		audioController.playGameOver ();
 
 		yield return new WaitForSeconds(2);
 

@@ -1,0 +1,30 @@
+/* array of static_keys for cgroup_subsys_enabled() and cgroup_subsys_on_dfl() */
+#define SUBSYS(_x)                              \
+    DEFINE_STATIC_KEY_TRUE(_x ## _cgrp_subsys_enabled_key);         \
+    DEFINE_STATIC_KEY_TRUE(_x ## _cgrp_subsys_on_dfl_key);          \
+    EXPORT_SYMBOL_GPL(_x ## _cgrp_subsys_enabled_key);          \
+    EXPORT_SYMBOL_GPL(_x ## _cgrp_subsys_on_dfl_key);
+#include <linux/cgroup_subsys.h>
+#undef SUBSYS
+
+#define SUBSYS(_x) [_x ## _cgrp_id] = &_x ## _cgrp_subsys_enabled_key,
+static struct static_key_true *cgroup_subsys_enabled_key[] = {
+#include <linux/cgroup_subsys.h>
+};
+#undef SUBSYS
+
+#define SUBSYS(_x) [_x ## _cgrp_id] = &_x ## _cgrp_subsys_on_dfl_key,
+static struct static_key_true *cgroup_subsys_on_dfl_key[] = {
+#include <linux/cgroup_subsys.h>
+};
+#undef SUBSYS
+
+/*
+ * The default hierarchy, reserved for the subsystems that are otherwise
+ * unattached - it never has more than a single cgroup, and all tasks are
+ * part of that cgroup.
+ */
+struct cgroup_root cgrp_dfl_root;
+EXPORT_SYMBOL_GPL(cgrp_dfl_root);
+EXPORT_SYMBOL_GPL(_x ## _cgrp_subsys_on_dfl_key);
+DEFINE_STATIC_KEY_TRUE(_x ## _cgrp_subsys_on_dfl_key); 

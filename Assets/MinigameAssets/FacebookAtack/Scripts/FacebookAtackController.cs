@@ -6,6 +6,7 @@ public class FacebookAtackController : MonoBehaviour {
 	// All Minigames must have these variables
 	public int totalSeconds;
 	private int currentTimeCount;
+	public GameObject startInstructions;
 
 	public GameObject facebookPage;
 	public int nPagesMax;
@@ -26,7 +27,10 @@ public class FacebookAtackController : MonoBehaviour {
 		StartCoroutine (popUpWindows ());
 
 		totalSeconds = (int)(nPages * 2) - (difficulty-1);
-		currentTimeCount = totalSeconds+1;		
+		currentTimeCount = totalSeconds+1;
+
+		StartCoroutine (showSplashInstructions());
+
 		TimeCountdown ();
 		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 	}
@@ -62,5 +66,14 @@ public class FacebookAtackController : MonoBehaviour {
 		if (windowCount == 0) {
 			gameController.wonMinigame(20*difficulty);
 		}
+	}
+
+	IEnumerator showSplashInstructions()
+	{
+		// show splash!
+		startInstructions.SetActive(true);
+		yield return new WaitForSeconds(1);
+		currentTimeCount++;
+		startInstructions.SetActive(false);
 	}
 }

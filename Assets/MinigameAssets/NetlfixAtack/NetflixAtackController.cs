@@ -6,6 +6,7 @@ public class NetflixAtackController : MonoBehaviour {
 	// All Minigames must have these variables
 	public int totalSeconds;
 	private int currentTimeCount;
+	public GameObject startInstructions;
 
 	public Sprite[] netflixWindows;
 	public GameObject netflixWindowPrefab;
@@ -21,7 +22,8 @@ public class NetflixAtackController : MonoBehaviour {
 		difficulty = gameController.getDifficulty (3);
 
 		totalSeconds = 5;
-		currentTimeCount = totalSeconds+1;		
+		currentTimeCount = totalSeconds+1;
+		StartCoroutine (showSplashInstructions());
 		TimeCountdown ();
 		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 
@@ -54,5 +56,14 @@ public class NetflixAtackController : MonoBehaviour {
 		GameObject newPage = Instantiate(netflixWindowPrefab, transform) as GameObject;
 		newPage.transform.localPosition = windowPlacement;
 		newPage.GetComponent<SpriteRenderer> ().sprite = netflixWindows [movieKind];
+	}
+
+	IEnumerator showSplashInstructions()
+	{
+		// show splash!
+		startInstructions.SetActive(true);
+		yield return new WaitForSeconds(1);
+		currentTimeCount++;
+		startInstructions.SetActive(false);
 	}
 }

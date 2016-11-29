@@ -67,5 +67,7 @@ public class BackgroundAudioContoller : MonoBehaviour {
 	}
 
 	public void playGameOver() {
+		source.clip = gameOver;
+		source.Play ();
 	}
 }

@@ -1,0 +1,30 @@
+static int posix_clock_mmap(struct file *fp, struct vm_area_struct *vma)
+{
+    struct posix_clock *clk = get_posix_clock(fp);
+    int err = -ENODEV;
+
+    if (!clk)
+        return -ENODEV;
+    if (clk->ops.mmap)
+        err = clk->ops.mmap(clk, vma);
+    put_posix_clock(clk);
+
+    return err;
+}
+
+static long posix_clock_ioctl(struct file *fp,
+                  unsigned int cmd, unsigned long arg)
+{
+    struct posix_clock *clk = get_posix_clock(fp);
+    int err = -ENOTTY;
+
+    if (!clk)
+        return -ENODEV;
+
+    if (clk->ops.ioctl)
+        err = clk->ops.ioctl(clk, cmd, arg);
+
+    put_posix_clock(clk);
+
+    return err;
+}

@@ -1,0 +1,30 @@
+void clear_lock_stats(struct lock_class *class)
+{
+    int cpu;
+
+    for_each_possible_cpu(cpu) {
+        struct lock_class_stats *cpu_stats =
+            &per_cpu(cpu_lock_stats, cpu)[class - lock_classes];
+
+        memset(cpu_stats, 0, sizeof(struct lock_class_stats));
+    }
+    memset(class->contention_point, 0, sizeof(class->contention_point));
+    memset(class->contending_point, 0, sizeof(class->contending_point));
+}
+
+static struct lock_class_stats *get_lock_stats(struct lock_class *class)
+{
+    return &get_cpu_var(cpu_lock_stats)[class - lock_classes];
+}
+
+static void put_lock_stats(struct lock_class_stats *stats)
+{
+    put_cpu_var(cpu_lock_stats);
+}
+
+#else
+static inline void lock_release_holdtime(struct held_lock *hlock)
+{
+
+}
+#endif

@@ -7,6 +7,7 @@ public class TelegramSilencingController : MonoBehaviour
 	// All Minigames must have these variables
 	public int totalSeconds;
 	private int currentTimeCount;
+	public GameObject startInstructions;
 
 	public GameObject[] messageSpots;
 	public int maxMessages;
@@ -47,6 +48,7 @@ public class TelegramSilencingController : MonoBehaviour
 
 		totalSeconds = 5;
 		currentTimeCount = totalSeconds+1;
+		StartCoroutine (showSplashInstructions());
 		TimeCountdown ();
 		InvokeRepeating ("TimeCountdown", 1.0f, 1.0f);
 
@@ -180,5 +182,14 @@ public class TelegramSilencingController : MonoBehaviour
 		if (currentTimeCount == 0) {
 			gameController.lostMinigame ();
 		}
+	}
+
+	IEnumerator showSplashInstructions()
+	{
+		// show splash!
+		startInstructions.SetActive(true);
+		yield return new WaitForSeconds(1);
+		currentTimeCount++;
+		startInstructions.SetActive(false);
 	}
 }
