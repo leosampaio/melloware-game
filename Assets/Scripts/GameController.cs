@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEditor;
 using System.IO;
 
 public class GameController : MonoBehaviour {
@@ -284,10 +283,10 @@ public class GameController : MonoBehaviour {
 	// HIGH SCORE and implications of its existance
 	private void checkHighScore() {
 		try {
-			currentHighscore = int.Parse (File.ReadAllText (Application.persistentDataPath + "/highscore.txt"));
+			currentHighscore = PlayerPrefs.GetInt("highscore");
 		}
 		catch (System.Exception e) {
-			File.WriteAllText(Application.persistentDataPath +"/highscore.txt", "0");
+			PlayerPrefs.SetInt ("highscore", 0);
 			currentHighscore = 0;
 		}
 
@@ -297,6 +296,7 @@ public class GameController : MonoBehaviour {
 	private void updateHighscore() {
 		if (score > currentHighscore) {
 			File.WriteAllText (Application.persistentDataPath + "/highscore.txt", score.ToString ());
+			PlayerPrefs.SetInt ("highscore", score);
 		}
 	}
 }
