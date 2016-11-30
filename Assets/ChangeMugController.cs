@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ChangeMugController : MonoBehaviour {
 
-	public GameObject otherMug;
+	public GameObject[] otherMugs;
 	public Sprite[] alternativeMugs;
 	private int allowedMugs;
 	public GameObject unlockNewMugsText;
@@ -30,21 +30,25 @@ public class ChangeMugController : MonoBehaviour {
 	void OnMouseDown () {
 		isRotating = true;
 		Invoke ("stopRotating", 0.38f);
-		//if (allowedMugs != alternativeMugs.Length)
+		if (allowedMugs != alternativeMugs.Length)
 			StartCoroutine (showUnlockNewMugs());
 	}
 
 	void stopRotating() {
 		isRotating = false;
 		transform.rotation = finalRotation;
-		allowedMugs = gameController.currentHighscore / 200;
-		currentMug = (currentMug + 1) % Mathf.Min(alternativeMugs.Length, allowedMugs);
+		int itsOver8000 = 1;
+		if (gameController.currentHighscore >= 8001)
+			itsOver8000 = 0;
+		allowedMugs = Mathf.Min(alternativeMugs.Length-itsOver8000, gameController.currentHighscore / 200);
+		currentMug = (currentMug + 1) % allowedMugs;
 		updateMugs ();
 	}
 
 	void updateMugs() {
 		GetComponent<SpriteRenderer> ().sprite = alternativeMugs [currentMug];
-		otherMug.GetComponent<SpriteRenderer> ().sprite = alternativeMugs [currentMug];
+		for (int i = 0; i < otherMugs.Length; i++)
+			otherMugs[i].GetComponent<SpriteRenderer> ().sprite = alternativeMugs [currentMug];
 	}
 
 	IEnumerator showUnlockNewMugs()
