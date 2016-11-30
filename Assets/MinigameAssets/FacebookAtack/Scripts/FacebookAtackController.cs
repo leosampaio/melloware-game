@@ -26,7 +26,9 @@ public class FacebookAtackController : MonoBehaviour {
 		windowCount = nPages;
 		StartCoroutine (popUpWindows ());
 
-		totalSeconds = (int)(nPages * 2) - (difficulty-1);
+		if (difficulty == 1) {totalSeconds = 3;}
+		if (difficulty == 2) {totalSeconds = 4;}
+		if (difficulty == 3) {totalSeconds = 5;}
 		currentTimeCount = totalSeconds+1;
 
 		StartCoroutine (showSplashInstructions());
@@ -73,7 +75,6 @@ public class FacebookAtackController : MonoBehaviour {
 		// show splash!
 		startInstructions.SetActive(true);
 		yield return new WaitForSeconds(1);
-		currentTimeCount++;
 		startInstructions.SetActive(false);
 	}
 }

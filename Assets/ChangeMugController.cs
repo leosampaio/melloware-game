@@ -30,6 +30,7 @@ public class ChangeMugController : MonoBehaviour {
 	void OnMouseDown () {
 		isRotating = true;
 		Invoke ("stopRotating", 0.38f);
+		GetComponent<AudioSource> ().Play ();
 		if (allowedMugs != alternativeMugs.Length)
 			StartCoroutine (showUnlockNewMugs());
 	}

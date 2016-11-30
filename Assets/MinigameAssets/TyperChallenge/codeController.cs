@@ -31,10 +31,10 @@ public class codeController : MonoBehaviour {
 		int selectedCodeID = Random.Range (0, possibleCodes.Length);
 		selectedCode = possibleCodes [selectedCodeID].text;
 
-		if (difficulty == 1) typingSpeed = selectedCode.Length/50;
-		else if (difficulty == 2) typingSpeed = selectedCode.Length/55;
-		else if (difficulty == 3) typingSpeed = selectedCode.Length/60;
-		else if (difficulty == 4) typingSpeed = selectedCode.Length/65;
+		if (difficulty == 1) typingSpeed = selectedCode.Length/51;
+		else if (difficulty == 2) typingSpeed = selectedCode.Length/56;
+		else if (difficulty == 3) typingSpeed = selectedCode.Length/61;
+		else if (difficulty == 4) typingSpeed = selectedCode.Length/66;
 
 		totalSeconds = 5;
 		currentTimeCount = totalSeconds+1;
@@ -74,7 +74,6 @@ public class codeController : MonoBehaviour {
 		// show splash!
 		startInstructions.SetActive(true);
 		yield return new WaitForSeconds(1);
-		currentTimeCount++;
 		startInstructions.SetActive(false);
 	}
 }
