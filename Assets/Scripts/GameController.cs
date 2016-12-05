@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
@@ -47,6 +48,8 @@ public class GameController : MonoBehaviour {
 
 	public GameObject audioSource;
 	private BackgroundAudioContoller audioController;
+
+	public GameObject[] gameUIObjects;
 
 	// Use this for initialization
 	void Start () {
@@ -185,6 +188,7 @@ public class GameController : MonoBehaviour {
 	public void StartStartCountdown()
 	{
 		startCountdownText.gameObject.SetActive (true);
+		activateAllGameUIObjects ();
 		audioController.playStartCountdown ();
 		InvokeRepeating ("StartCountdown", 1.0f, 1.0f);
 	}
@@ -264,6 +268,7 @@ public class GameController : MonoBehaviour {
 		audioController.playGameOver ();
 
 		yield return new WaitForSeconds(2);
+		unloadAllScenesAndHideGameUI ();
 
 		mainCamera.GetComponent<MainCameraController> ().focusOutOfGame ();
 
@@ -274,7 +279,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	// game difficulty
-
 	public int getDifficulty(int max)
 	{
 		return (int) Mathf.Min(1 + (int) score / 100, max);
@@ -297,6 +301,25 @@ public class GameController : MonoBehaviour {
 		if (score > currentHighscore) {
 			File.WriteAllText (Application.persistentDataPath + "/highscore.txt", score.ToString ());
 			PlayerPrefs.SetInt ("highscore", score);
+		}
+	}
+
+	private void unloadAllScenesAndHideGameUI() {
+		if (SceneManager.sceneCount > 1) {
+			for (int i = 1; i < SceneManager.sceneCount; i++) {
+				Scene toBeUnloaded = SceneManager.GetSceneAt (i);
+				if (toBeUnloaded.name != "GameInterface")
+					SceneManager.UnloadScene (toBeUnloaded);
+			}
+		}
+		for (int i = 0; i < gameUIObjects.Length; i++) {
+			gameUIObjects [i].SetActive (false);
+		}
+	}
+
+	private void activateAllGameUIObjects() {
+		for (int i = 0; i < gameUIObjects.Length; i++) {
+			gameUIObjects [i].SetActive (true);
 		}
 	}
 }
