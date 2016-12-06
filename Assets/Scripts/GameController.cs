@@ -138,7 +138,7 @@ public class GameController : MonoBehaviour {
 	// returns false if game over, true if the user can keep playing
 	bool updateLifeCount ()
 	{
-		int totalLives = lifeSprites.GetLength(0);
+		int totalLives = lifeSprites.Length;
 
 		if (lifeCount == 0) {
 			endGame ();
