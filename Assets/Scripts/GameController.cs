@@ -322,4 +322,10 @@ public class GameController : MonoBehaviour {
 			gameUIObjects [i].SetActive (true);
 		}
 	}
+
+    public void resetHighscore()
+    {
+        PlayerPrefs.SetInt("highscore", 0);
+        checkHighScore();
+    }
 }
